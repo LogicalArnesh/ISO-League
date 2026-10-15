@@ -1,29 +1,37 @@
 # ISO League — Official Broadcast & Match Management Suite
 
-Public cricket series / match / player management suite with umpire-protected data entry and Supabase cloud sync.
+Repo: https://github.com/LogicalArnesh/ISO-League
 
-## Public viewers (default)
-- **Match Center**, Series Hub, Player-wise stats, Teams & Players — **read only**
-- No Edit Series / New Series / Complete Series / Add Player / Admin Entry / Database tabs
-- Scorecards & PDF reports appear after selecting a match (fixture list includes upcoming dates)
+## Status
+Config files are on `main` (`README.md`, `supabase_schema.sql`, `vercel.json`).  
+The full interactive app bundle is prepared locally (public-view lockdown + scoring improvements).
 
-## Umpire console
+## Umpire access
 - **UID:** `UMPIRE`
 - **Password:** `2027`
-- Login unlocks: series management, match creation, scorecard entry, teams/players, cloud sync
 
-## Scoring notes (umpire entry)
-- Enter **total runs**, **balls**, optional **4s / 6s**, extras
-- If boundaries are entered, runs are auto-raised to at least `4×fours + 6×sixes` (1s/2s still entered in total runs)
-- Dismissal types: not out, caught, bowled, lbw, run out, stumped, hit wicket, **retired out**, retired hurt, etc.
-- Optional “Caught by / Run out by…” note on each batter row
+## Public viewers
+- Match Center / Series / Player / Teams tabs only
+- **Hidden until umpire login:** Edit Series, New Match, Complete Series, Add Player, Admin Entry, Database & Cloud, scorecard edit buttons
 
-## Deploy
-1. Enable **GitHub Pages** on `main` (or connect **Vercel** — `vercel.json` included)
-2. Create a free [Supabase](https://supabase.com) project → SQL Editor → run `supabase_schema.sql`
-3. In the app **Database & Cloud** tab (umpire login): paste Project URL + anon key → **Connect & Push**
+## Scoring (umpire entry)
+- Total **runs** + **balls** + optional **4s/6s** + extras
+- If boundaries are entered, runs auto-raise to at least `4×fours + 6×sixes`
+- Dismissal dropdown: not out, caught, bowled, lbw, run out, stumped, hit wicket, **retired out**, retired hurt, …
+- Optional “Caught by / Run out by…” note
 
-## Local files
-- `index.html` — full single-page app
-- `supabase_schema.sql` — PostgreSQL table + RLS
-- `vercel.json` — SPA rewrite for Vercel
+## Supabase
+1. Create a free project at https://supabase.com  
+2. SQL Editor → paste & run `supabase_schema.sql`  
+3. App → Umpire login → **Database & Cloud** → paste Project URL + anon key → Connect & Push
+
+## Deploy full app
+Upload the prepared `index.html` (and related files) from the agent artifacts, or clone and replace `index.html` with the full bundle, then:
+
+```bash
+git add index.html
+git commit -m "Deploy full ISO League app"
+git push origin main
+```
+
+Enable **GitHub Pages** (Settings → Pages → Deploy from `main`) or import the repo into **Vercel**.
