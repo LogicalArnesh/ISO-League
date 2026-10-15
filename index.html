@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ISO League — Deploying full app</title>
-  <style>
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
-      background:#060b14;color:#e2e8f0;font-family:system-ui,sans-serif;padding:24px;text-align:center}
-    .card{max-width:520px;background:#0f172a;border:1px solid #334155;border-radius:16px;padding:28px}
-    h1{font-size:1.35rem;margin:0 0 12px;color:#34d399}
-    p{color:#94a3b8;line-height:1.5;margin:0 0 10px}
-    code{background:#1e293b;padding:2px 6px;border-radius:6px;color:#fbbf24}
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>ISO League</h1>
-    <p>The previous deploy was incomplete (missing <code>payload2.txt</code>).</p>
-    <p>A full single-file app is being redeployed. Refresh shortly.</p>
-    <p style="margin-top:16px;font-size:0.85rem">Supabase project <code>ISO PREMIER LEAGUE</code> is active and schema is ready.</p>
-  </div>
-</body>
-</html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>ISO League</title></head>
+<body style="margin:0;background:#060b14;color:#e2e8f0;font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh">
+<p id="st">Loading ISO League...</p>
+<script>
+(async function(){
+  const n=12; const st=document.getElementById('st');
+  try{
+    let b64='';
+    for(let i=0;i<n;i++){
+      st.textContent='Loading... '+(i+1)+'/'+n;
+      const name='c'+String(i).padStart(2,'0')+'.txt';
+      const r=await fetch(name);
+      if(!r.ok) throw new Error('Missing '+name);
+      b64+=(await r.text()).trim();
+    }
+    const bin=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    const stream=new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    document.open();document.write(html);document.close();
+  }catch(e){st.textContent='Failed: '+e;console.error(e);}
+})();
+</script></body></html>
