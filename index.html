@@ -6,23 +6,19 @@
 (async function(){
   const n=12; const st=document.getElementById('st');
   try{
-    st.textContent='Loading chunks...';
-    const promises = [];
+    let b64 = '';
     for(let i=0;i<n;i++){
-      const name='c'+String(i).padStart(2,'0')+'.txt';
-      promises.push(fetch(name, {cache: 'no-store'}).then(r=>{
-        if(!r.ok) throw new Error('Missing '+name+' ('+r.status+')');
-        return r.text();
-      }));
+      st.textContent = 'Loading... ' + (i+1) + '/' + n;
+      const name = 'c' + String(i).padStart(2,'0') + '.txt';
+      const r = await fetch(name, {cache: 'no-store'});
+      if(!r.ok) throw new Error('Missing ' + name + ' (' + r.status + ')');
+      b64 += (await r.text()).trim();
     }
-    const parts = await Promise.all(promises);
-    st.textContent='Assembling app...';
-    const b64 = parts.map(p=>p.trim()).join('');
-    const bin=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
-    st.textContent='Starting...';
-    const stream=new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
-    const html=await new Response(stream).text();
-    document.open();document.write(html);document.close();
-  }catch(e){st.textContent='Failed: '+e.message;console.error(e);}
+    st.textContent = 'Unpacking...';
+    const bin = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const stream = new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html = await new Response(stream).text();
+    document.open(); document.write(html); document.close();
+  }catch(e){st.textContent = 'Failed: ' + e.message; console.error(e);}
 })();
 </script></body></html>
