@@ -5,12 +5,13 @@
 <script>
 (async function(){
   const n=12; const st=document.getElementById('st');
+  const base = 'https://raw.githubusercontent.com/LogicalArnesh/ISO-League/main/';
   try{
     let b64 = '';
     for(let i=0;i<n;i++){
       st.textContent = 'Loading... ' + (i+1) + '/' + n;
       const name = 'c' + String(i).padStart(2,'0') + '.txt';
-      const r = await fetch(name, {cache: 'no-store'});
+      const r = await fetch(base + name + '?t=' + Date.now());
       if(!r.ok) throw new Error('Missing ' + name + ' (' + r.status + ')');
       b64 += (await r.text()).trim();
     }
