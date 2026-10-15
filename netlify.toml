@@ -1,0 +1,10 @@
+[build]
+  publish = "."
+  command = "echo static"
+  # Skip automatic Git builds — full app is published only via controlled Netlify deploys
+  ignore = "exit 0"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
